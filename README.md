@@ -9,7 +9,7 @@ urlFragment: ms-identity-python-webapp
 ---
 # Integrating Microsoft Identity Platform with a Python web application
 
-This is a Python web application that uses the Flask framework and the Microsoft identity platform to sign in users and make authenticated calls to the Microsoft Graph API.
+This is a Python web application that uses the Flask framework and the Microsoft identity platform to sign in users and display user information from the token.
 
 To get started with this sample, you have two options:
 
