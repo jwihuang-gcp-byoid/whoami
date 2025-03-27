@@ -5,8 +5,8 @@ from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
-def get_user_info_from_header(request: Request):
-    principal_header = request.headers.get("X-MS-CLIENT-PRINCIPAL")
+def get_id_token_from_header(request: Request):
+    principal_header = request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN")
     if not principal_header:
         return None
     try:
@@ -19,19 +19,19 @@ def get_user_info_from_header(request: Request):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    user_info = get_user_info_from_header(request)
-    if user_info is None:
+    id_token = get_id_token_from_header(request)
+    if id_token is None:
         return HTMLResponse(
-            content="<html><body><h1>Authentication Error: No user info found.</h1></body></html>",
+            content="<html><body><h1>Authentication Error: No user ID token found from the header `X-MS-TOKEN-AAD-ID-TOKEN`.</h1></body></html>",
             status_code=401
         )
-    user_details = json.dumps(user_info, indent=2)
+    user_details = json.dumps(id_token, indent=2)
     return HTMLResponse(
         content=f"""
         <html>
             <body>
                 <h1>Welcome!</h1>
-                <h2>Your User Information</h2>
+                <h2>Below is the clear text JWT (from X-MS-TOKEN-AAD-ID-TOKEN header) used in this azure app, which should contain the info of who you are:</h2>
                 <pre>{user_details}</pre>
             </body>
         </html>
