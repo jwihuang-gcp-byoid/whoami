@@ -23,7 +23,7 @@ async def home(request: Request):
     if id_token is None:
         headers_json = json.dumps(request.headers, indent=2)
         return HTMLResponse(
-            content="""
+            content=f"""
             <html>
                 <body>
                     <h1>Authentication Error: No user ID token found from the header `X-MS-TOKEN-AAD-ID-TOKEN`. All headers are below:</h1>
