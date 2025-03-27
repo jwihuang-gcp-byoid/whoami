@@ -1,20 +1,20 @@
 import base64
 import json
+import jwt
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
 def get_id_token_from_header(request: Request):
-    principal_header = request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN")
-    if not principal_header:
+    id_token = request.headers.get("X-MS-TOKEN-AAD-ID-TOKEN")
+    if not id_token:
         return None
     try:
-        decoded_bytes = base64.b64decode(principal_header)
-        decoded_str = decoded_bytes.decode("utf-8")
-        return json.loads(decoded_str)
+        # Decode the token without verification (useful for debugging)
+        return jwt.decode(id_token, options={"verify_signature": False})
     except Exception as e:
-        print(f"Error decoding header: {e}")
+        print(f"Error decoding jwt: {e}")
         return None
 
 @app.get("/", response_class=HTMLResponse)
@@ -25,7 +25,7 @@ async def home(request: Request):
             content=f"""
             <html>
                 <body>
-                    <h1>Authentication Error: No user ID token found from the header `X-MS-TOKEN-AAD-ID-TOKEN`. All headers are below:</h1>
+                    <h1>Authentication Error: No user ID token found from the header `X-MS-TOKEN-AAD-ID-TOKEN`.</h1>
                 </body>
             </html>
             """,
